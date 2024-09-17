@@ -4,6 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+
+import java.util.Set;
 
 /**
  * Created by jt, Spring Framework Guru.
@@ -16,6 +21,19 @@ public class Book {
     private Long id;
     private String title;
     private String isbn;
+
+    @ManyToMany
+    @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
+    inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<Author> authors;
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
+    }
 
     public Long getId() {
         return id;
@@ -40,4 +58,6 @@ public class Book {
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
+
+
 }

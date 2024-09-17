@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.util.Set;
+
 /**
  * Created by jt, Spring Framework Guru.
  */
@@ -16,6 +18,17 @@ public class Author {
     private Long id;
     private String firstName;
     private String lastName;
+
+    @ManyToMany(mappedBy = "authors")
+    private Set<Book> books;
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
 
     public Long getId() {
         return id;
@@ -40,4 +53,6 @@ public class Author {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+
 }
