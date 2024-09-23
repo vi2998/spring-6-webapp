@@ -12,9 +12,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-/**
- * Created by jt, Spring Framework Guru.
- */
 @Entity
 public class Book {
 
@@ -26,9 +23,14 @@ public class Book {
 
     @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
-    inverseJoinColumns = @JoinColumn(name = "author_id"))
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors = new HashSet<>();
 
+    // Nuovo campo per la relazione Many-to-Many con Publisher
+    @ManyToMany(mappedBy = "books") // Specifica che è il lato non proprietario
+    private Set<Publisher> publishers = new HashSet<>(); // Aggiunto
+
+    // Getter e Setter per authors
     public Set<Author> getAuthors() {
         return authors;
     }
@@ -37,6 +39,16 @@ public class Book {
         this.authors = authors;
     }
 
+    // Getter e Setter per publishers - Nuovi metodi aggiunti
+    public Set<Publisher> getPublishers() { // Aggiunto
+        return publishers; // Aggiunto
+    } // Aggiunto
+
+    public void setPublishers(Set<Publisher> publishers) { // Aggiunto
+        this.publishers = publishers; // Aggiunto
+    } // Aggiunto
+
+    // Altri getter e setter
     public Long getId() {
         return id;
     }
@@ -68,6 +80,7 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", isbn='" + isbn + '\'' +
                 ", authors=" + authors +
+                ", publishers=" + publishers + // Aggiunto per visualizzare i publisher
                 '}';
     }
 
