@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Framework Guru</title>
+</head>
+<body>
+<h1>Book List</h1>
+
+<table>
+    <tr>
+        <th>ID</th> <!-- Intestazione per l'ID del libro -->
+        <th>First Name</th> <!-- Intestazione per il titolo del libro -->
+        <th>Last Name</th> <!-- Intestazione per il nome dell'editore -->
+    </tr>
+    <tr th:each="author : ${authors}"> <!-- Ciclo su ogni libro nella lista 'books' -->
+        <td th:text="${author.id}">123</td> <!-- Mostra l'ID del libro; '123' è un valore di fallback nel caso non venga trovato l'ID -->
+        <td th:text="${author.firstName}">John</td> <!-- Mostra il titolo del libro; 'Spring in Action' è un valore di fallback nel caso non venga trovato il titolo -->
+        <td th:text="${author.lastName}">Thompson</td> <!-- Mostra il nome dell'editore; 'Wrox' è un valore di fallback nel caso non venga trovato il nome dell'editore -->
+    </tr>
+</table>
+
+</body>
+</html>
