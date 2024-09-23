@@ -69,6 +69,10 @@ public class BootstrapData implements CommandLineRunner {
         // Associa il libro "J2EE Development without EJB" all'autore Rod.
         rodSaved.getBooks().add(noEJBSaved);
 
+        // Aggiunge gli autori ai rispettivi libri.
+        dddSaved.getAuthors().add(ericSaved);
+        noEJBSaved.getAuthors().add(rodSaved);
+
         // Crea un nuovo editore (Publisher).
         Publisher publisher = new Publisher();
         publisher.setPublisherName("My Publisher");
