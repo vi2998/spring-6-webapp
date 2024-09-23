@@ -5,26 +5,33 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Classe `Publisher` che rappresenta un editore nel sistema.
+ * È una entità JPA mappata a una tabella nel database.
+ */
 @Entity
 public class Publisher {
+
+    // ID generato automaticamente, è la chiave primaria della tabella Publisher.
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String publisherName; // Corretto da 'publischerName' a 'publisherName'
+
+    // Nome dell'editore
+    private String publisherName;
+
+    // Indirizzo, città, stato e CAP dell'editore.
     private String address;
     private String city;
     private String state;
     private String zip;
 
-    @ManyToMany
-    @JoinTable(
-            name = "publisher_book",
-            joinColumns = @JoinColumn(name = "publisher_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
-    private Set<Book> books = new HashSet<>();
+    // Relazione OneToMany con la classe `Book`. Un editore può pubblicare molti libri.
+    // La proprietà `mappedBy = "publisher"` indica che la relazione è gestita dalla proprietà `publisher` nella classe `Book`.
+    @OneToMany(mappedBy = "publisher")
+    private Set<Book> books = new HashSet<>();  // Inizializza `books` per evitare problemi di null pointer.
 
-    // Getters e Setters
+    // Getter e setter per la collezione di libri associati all'editore.
     public Set<Book> getBooks() {
         return books;
     }
@@ -33,6 +40,7 @@ public class Publisher {
         this.books = books;
     }
 
+    // Getter e setter per il CAP dell'editore.
     public String getZip() {
         return zip;
     }
@@ -41,6 +49,7 @@ public class Publisher {
         this.zip = zip;
     }
 
+    // Getter e setter per lo stato dell'editore.
     public String getState() {
         return state;
     }
@@ -49,6 +58,7 @@ public class Publisher {
         this.state = state;
     }
 
+    // Getter e setter per la città dell'editore.
     public String getCity() {
         return city;
     }
@@ -57,6 +67,7 @@ public class Publisher {
         this.city = city;
     }
 
+    // Getter e setter per l'indirizzo dell'editore.
     public String getAddress() {
         return address;
     }
@@ -65,6 +76,7 @@ public class Publisher {
         this.address = address;
     }
 
+    // Getter e setter per il nome dell'editore.
     public String getPublisherName() {
         return publisherName;
     }
@@ -73,6 +85,7 @@ public class Publisher {
         this.publisherName = publisherName;
     }
 
+    // Getter e setter per l'ID dell'editore.
     public Long getId() {
         return id;
     }
@@ -81,6 +94,7 @@ public class Publisher {
         this.id = id;
     }
 
+    // Override del metodo `toString` per ottenere una rappresentazione stringa dell'oggetto Publisher.
     @Override
     public String toString() {
         return "Publisher{" +
@@ -93,15 +107,18 @@ public class Publisher {
                 '}';
     }
 
+    // Override del metodo `equals` per confrontare due oggetti Publisher.
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;  // Verifica se si tratta dello stesso oggetto in memoria.
+        if (o == null || getClass() != o.getClass()) return false;  // Verifica che `o` non sia null e sia della classe `Publisher`.
 
         Publisher publisher = (Publisher) o;
+        // Confronta gli ID degli editori per determinare l'uguaglianza.
         return Objects.equals(getId(), publisher.getId());
     }
 
+    // Override del metodo `hashCode` per generare un hash basato sull'ID dell'editore.
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());

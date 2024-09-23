@@ -9,79 +9,90 @@ import guru.springframework.spring6webapp.repositories.PublisherRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Component
+/**
+ * Classe di bootstrap dei dati.
+ * Viene eseguita all'avvio dell'applicazione per popolare il database con dati iniziali.
+ */
+@Component  // Indica a Spring che questa classe è un componente gestito dal framework.
 public class BootstrapData implements CommandLineRunner {
 
+    // Repository per salvare e recuperare dati di autori, libri e editori.
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
     private final PublisherRepository publisherRepository;
 
-    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
+    // Costruttore per iniettare le dipendenze (repository).
+    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository,
+                         PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.publisherRepository = publisherRepository;
     }
 
+    /**
+     * Metodo eseguito all'avvio dell'applicazione per popolare i dati.
+     * Il parametro `args` contiene eventuali argomenti di avvio passati all'applicazione.
+     */
     @Override
     public void run(String... args) throws Exception {
-
+        // Crea un nuovo autore Eric Evans.
         Author eric = new Author();
         eric.setFirstName("Eric");
         eric.setLastName("Evans");
 
+        // Crea un nuovo libro "Domain Driven Design" con ISBN 123456.
         Book ddd = new Book();
         ddd.setTitle("Domain Driven Design");
         ddd.setIsbn("123456");
 
+        // Salva l'autore Eric e il libro nel repository (nel database).
         Author ericSaved = authorRepository.save(eric);
         Book dddSaved = bookRepository.save(ddd);
 
+        // Crea un nuovo autore Rod Johnson.
         Author rod = new Author();
         rod.setFirstName("Rod");
         rod.setLastName("Johnson");
 
+        // Crea un nuovo libro "J2EE Development without EJB" con ISBN 54757585.
         Book noEJB = new Book();
         noEJB.setTitle("J2EE Development without EJB");
         noEJB.setIsbn("54757585");
 
-        Author provaA = new Author();
-        provaA.setFirstName("Nome");
-        provaA.setLastName("Cognome");
-
-        Book provaB = new Book();
-        provaB.setTitle("Titolo");
-        provaB.setIsbn("11111111");
-
-        Publisher editore = new Publisher();
-        editore.setPublisherName("Mondadori");
-        editore.setAddress("Piazza Duomo");
-        editore.setCity("Milano");
-        editore.setState("Italy");
-        editore.setZip("00000");
-
-        // Salvataggio degli autori e dei libri
+        // Salva l'autore Rod e il libro nel repository (nel database).
         Author rodSaved = authorRepository.save(rod);
         Book noEJBSaved = bookRepository.save(noEJB);
 
-        // Salvataggio del publisher
-        Publisher savedPublisher = publisherRepository.save(editore);
-
-        // Associazione dei libri agli autori
+        // Associa il libro "Domain Driven Design" all'autore Eric.
         ericSaved.getBooks().add(dddSaved);
+
+        // Associa il libro "J2EE Development without EJB" all'autore Rod.
         rodSaved.getBooks().add(noEJBSaved);
 
-        // Associazione dei libri al publisher
-        savedPublisher.getBooks().add(dddSaved);
-        savedPublisher.getBooks().add(noEJBSaved);
+        // Crea un nuovo editore (Publisher).
+        Publisher publisher = new Publisher();
+        publisher.setPublisherName("My Publisher");
+        publisher.setAddress("123 Main");
 
-        // Salvataggio delle relazioni
+        // Salva l'editore nel repository (nel database).
+        Publisher savedPublisher = publisherRepository.save(publisher);
+
+        // Associa l'editore al libro "Domain Driven Design".
+        dddSaved.setPublisher(savedPublisher);
+
+        // Associa l'editore al libro "J2EE Development without EJB".
+        noEJBSaved.setPublisher(savedPublisher);
+
+        // Aggiorna le associazioni nei repository.
         authorRepository.save(ericSaved);
         authorRepository.save(rodSaved);
-        publisherRepository.save(savedPublisher); // Salvataggio del publisher
+        bookRepository.save(dddSaved);
+        bookRepository.save(noEJBSaved);
 
+        // Stampa informazioni di debug nel terminale.
         System.out.println("In Bootstrap");
-        System.out.println("Author Count: " + authorRepository.count());
-        System.out.println("Book Count: " + bookRepository.count());
-        System.out.println("Publisher Count: " + publisherRepository.count()); // Aggiunto per contare i publisher
+        System.out.println("Author Count: " + authorRepository.count()); // Stampa il numero totale di autori salvati.
+        System.out.println("Book Count: " + bookRepository.count());     // Stampa il numero totale di libri salvati.
+        System.out.println("Publisher Count: " + publisherRepository.count()); // Stampa il numero totale di editori salvati.
     }
 }
